@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      "ip_tracking",
+      "ratelimit",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'alx_backend_security.wsgi.application'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "ip-tracking-cache",
+        "TIMEOUT": None,  # we'll set per-key TTLs in code
+    }
+}
 
 
 # Database
@@ -122,3 +131,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# tell django-ratelimit which cache to use
+RATELIMIT_USE_CACHE = "default"
