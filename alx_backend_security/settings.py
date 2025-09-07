@@ -134,3 +134,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # tell django-ratelimit which cache to use
 RATELIMIT_USE_CACHE = "default"
+
+# Celery broker/result (use Redis if available)
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://127.0.0.1:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/0")
+CELERY_TIMEZONE = "Africa/Lagos"
+
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    "ip-anomaly-scan-hourly": {
+        "task": "ip_tracking.tasks.scan_for_suspicious_ips",
+        "schedule": crontab(minute=0, hour="*"),  # top of every hour
+    },
+}
